@@ -4,8 +4,51 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09bcda8380d92d9fd43b065151cc9ca6",
-    "packages": [],
+    "content-hash": "f2693817e197ff2478eda5f68dcd515f",
+    "packages": [
+        {
+            "name": "webignition/validator-message",
+            "version": "0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webignition/validator-message.git",
+                "reference": "16896f1f1b055256d23423b8f4f8c1ff3dda4822"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webignition/validator-message/zipball/16896f1f1b055256d23423b8f4f8c1ff3dda4822",
+                "reference": "16896f1f1b055256d23423b8f4f8c1ff3dda4822",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.11.1",
+                "phpunit/phpunit": "^7",
+                "squizlabs/php_codesniffer": "^3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "webignition\\ValidatorMessage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jon Cram",
+                    "email": "jon@webignition.net"
+                }
+            ],
+            "description": "Generic validation output message",
+            "homepage": "https://github.com/webignition/validator-message",
+            "time": "2019-01-29T13:19:14+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "composer/xdebug-handler",
