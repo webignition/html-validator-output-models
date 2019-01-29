@@ -22,6 +22,18 @@ abstract class AbstractMessage extends BaseAbstractMessage
         return $this->messageId;
     }
 
+    /**
+     * @param string $messageId
+     * @return AbstractMessage|InfoMessage|ValidationError
+     */
+    public function withMessageId(string $messageId): AbstractMessage
+    {
+        $new = clone $this;
+        $new->messageId = $messageId;
+
+        return $new;
+    }
+
     public function jsonSerialize(): array
     {
         return array_merge(parent::jsonSerialize(), [
