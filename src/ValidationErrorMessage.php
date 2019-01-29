@@ -2,7 +2,9 @@
 
 namespace webignition\HtmlValidatorOutput\Models;
 
-class ValidationErrorMessage extends ErrorMessage
+use webignition\ValidatorMessage\MessageInterface;
+
+class ValidationErrorMessage extends AbstractIssueMessage
 {
     const KEY_LINE_NUMBER = 'lastLine';
     const KEY_COLUMN_NUMBER = 'lastColumn';
@@ -17,7 +19,7 @@ class ValidationErrorMessage extends ErrorMessage
         int $lineNumber,
         int $columnNumber
     ) {
-        parent::__construct($message, $messageId, $explanation);
+        parent::__construct(MessageInterface::TYPE_ERROR, $message, $messageId, $explanation);
 
         $this->lineNumber = $lineNumber;
         $this->columnNumber = $columnNumber;
