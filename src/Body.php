@@ -21,7 +21,7 @@ class Body
         return !is_null($this->content);
     }
 
-    public function getContent(): \stdClass
+    public function getContent(): ?\stdClass
     {
         return $this->content;
     }
