@@ -4,7 +4,6 @@
 namespace webignition\HtmlValidatorOutput\Models\Tests;
 
 use webignition\HtmlValidatorOutput\Models\Body;
-use webignition\HtmlValidatorOutput\Models\Header;
 use webignition\HtmlValidatorOutput\Models\Output;
 
 class OutputTest extends \PHPUnit\Framework\TestCase
@@ -14,7 +13,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetMessages(Body $body, array $expectedMessages)
     {
-        $output = new Output(new Header(), $body);
+        $output = new Output($body);
 
         $this->assertEquals($expectedMessages, $output->getMessages());
     }
@@ -71,7 +70,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'validator internal server error' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object)[
+                'output' => new Output($this->createBodyWithContent((object)[
                     'messages' => [
                         (object) [
                             'messageId' => Output::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID,
@@ -81,7 +80,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedIsValid' => true,
             ],
             'info messages only' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object) [
+                'output' => new Output($this->createBodyWithContent((object) [
                     'messages' => [
                         (object) [
                             'type' => 'info',
@@ -97,7 +96,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedIsValid' => true,
             ],
             'error messages only' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object) [
+                'output' => new Output($this->createBodyWithContent((object) [
                     'messages' => [
                         (object) [
                             'type' => 'error',
@@ -113,7 +112,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedIsValid' => false,
             ],
             'info messages and error messages' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object) [
+                'output' => new Output($this->createBodyWithContent((object) [
                     'messages' => [
                         (object) [
                             'type' => 'info',
@@ -136,7 +135,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
 
     public function testWasAborted()
     {
-        $output = new Output(new Header(), new Body());
+        $output = new Output(new Body());
 
         $this->assertFalse($output->wasAborted());
 
@@ -159,7 +158,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'validator internal server error' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object)[
+                'output' => new Output($this->createBodyWithContent((object)[
                     'messages' => [
                         (object) [
                             'messageId' => Output::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID,
@@ -169,7 +168,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedErrorCount' => 0,
             ],
             'info messages only' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object) [
+                'output' => new Output($this->createBodyWithContent((object) [
                     'messages' => [
                         (object) [
                             'type' => 'info',
@@ -185,7 +184,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedErrorCount' => 0,
             ],
             'error messages only' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object) [
+                'output' => new Output($this->createBodyWithContent((object) [
                     'messages' => [
                         (object) [
                             'type' => 'error',
@@ -201,7 +200,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedErrorCount' => 3,
             ],
             'info messages and error messages' => [
-                'output' => new Output(new Header(), $this->createBodyWithContent((object) [
+                'output' => new Output($this->createBodyWithContent((object) [
                     'messages' => [
                         (object) [
                             'type' => 'info',
@@ -228,16 +227,5 @@ class OutputTest extends \PHPUnit\Framework\TestCase
         $body->setContent($content);
 
         return $body;
-    }
-
-    private function createHeader(array $fields): Header
-    {
-        $header = new Header();
-
-        foreach ($fields as $key => $value) {
-            $header->set($key, $value);
-        }
-
-        return $header;
     }
 }

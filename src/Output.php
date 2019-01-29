@@ -5,13 +5,7 @@ namespace webignition\HtmlValidatorOutput\Models;
 class Output
 {
     const TYPE_ERROR = 'error';
-
     const VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID = 'validator-internal-server-error';
-
-    /**
-     * @var Header
-     */
-    private $header;
 
     /**
      * @var Body
@@ -23,9 +17,8 @@ class Output
      */
     private $wasAborted = false;
 
-    public function __construct(Header $header, Body $body)
+    public function __construct(Body $body)
     {
-        $this->header = $header;
         $this->body = $body;
     }
 
