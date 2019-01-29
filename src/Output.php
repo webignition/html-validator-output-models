@@ -34,12 +34,7 @@ class Output
 
     public function isValid(): bool
     {
-        $status = $this->header->get('status');
-        if (is_null($status) || $status == self::STATUS_ABORT) {
-            return false;
-        }
-
-        return $status === self::STATUS_VALID;
+        return 0 === $this->getErrorCount();
     }
 
     public function wasAborted(): bool
