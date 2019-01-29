@@ -21,10 +21,20 @@ class Output
      */
     private $body;
 
+    /**
+     * @var bool
+     */
+    private $wasAborted = false;
+
     public function __construct(Header $header, Body $body)
     {
         $this->header = $header;
         $this->body = $body;
+    }
+
+    public function setWasAborted(bool $wasAborted)
+    {
+        $this->wasAborted = $wasAborted;
     }
 
     public function getMessages(): array
@@ -39,8 +49,7 @@ class Output
 
     public function wasAborted(): bool
     {
-        $status = $this->header->get('status');
-        return is_null($status) || $status == self::STATUS_ABORT;
+        return $this->wasAborted;
     }
 
     public function getErrorCount(): int

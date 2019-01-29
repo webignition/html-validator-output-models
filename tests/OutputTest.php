@@ -3,7 +3,6 @@
 
 namespace webignition\HtmlValidatorOutput\Models\Tests;
 
-use A\B;
 use webignition\HtmlValidatorOutput\Models\Body;
 use webignition\HtmlValidatorOutput\Models\Header;
 use webignition\HtmlValidatorOutput\Models\Output;
@@ -135,54 +134,17 @@ class OutputTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider wasAbortedDataProvider
-     */
-    public function testWasAborted(Header $header, bool $expectedWasAborted)
+    public function testWasAborted()
     {
-        $output = new Output($header, new Body());
+        $output = new Output(new Header(), new Body());
 
-        $this->assertEquals($expectedWasAborted, $output->wasAborted());
-    }
+        $this->assertFalse($output->wasAborted());
 
-    public function wasAbortedDataProvider(): array
-    {
-        return [
-            'empty header' => [
-                'header' => new Header(),
-                'expectedWasAborted' => true,
-            ],
-            'no status field' => [
-                'header' => $this->createHeader([
-                    'foo' => 'bar',
-                ]),
-                'expectedWasAborted' => true,
-            ],
-            'null status field' => [
-                'header' => $this->createHeader([
-                    'status' => null,
-                ]),
-                'expectedWasAborted' => true,
-            ],
-            'abort status field' => [
-                'header' => $this->createHeader([
-                    'status' => Output::STATUS_ABORT,
-                ]),
-                'expectedWasAborted' => true,
-            ],
-            'invalid status field' => [
-                'header' => $this->createHeader([
-                    'status' => Output::STATUS_INVALID,
-                ]),
-                'expectedWasAborted' => false,
-            ],
-            'valid status field' => [
-                'header' => $this->createHeader([
-                    'status' => Output::STATUS_VALID,
-                ]),
-                'expectedWasAborted' => false,
-            ],
-        ];
+        $output->setWasAborted(true);
+        $this->assertTrue($output->wasAborted());
+
+        $output->setWasAborted(false);
+        $this->assertFalse($output->wasAborted());
     }
 
     /**
