@@ -4,9 +4,6 @@ namespace webignition\HtmlValidatorOutput\Models;
 
 class Output
 {
-    const STATUS_VALID = 'Valid';
-    const STATUS_INVALID = 'Invalid';
-    const STATUS_ABORT = 'Abort';
     const TYPE_ERROR = 'error';
 
     const VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID = 'validator-internal-server-error';
