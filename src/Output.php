@@ -4,27 +4,27 @@ namespace webignition\HtmlValidatorOutput\Models;
 
 class Output
 {
-    const STATUS_VALID = 'Valid';
-    const STATUS_INVALID = 'Invalid';
-    const STATUS_ABORT = 'Abort';
     const TYPE_ERROR = 'error';
-
     const VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID = 'validator-internal-server-error';
-
-    /**
-     * @var Header
-     */
-    private $header;
 
     /**
      * @var Body
      */
     private $body;
 
-    public function __construct(Header $header, Body $body)
+    /**
+     * @var bool
+     */
+    private $wasAborted = false;
+
+    public function __construct(Body $body)
     {
-        $this->header = $header;
         $this->body = $body;
+    }
+
+    public function setWasAborted(bool $wasAborted)
+    {
+        $this->wasAborted = $wasAborted;
     }
 
     public function getMessages(): array
@@ -34,18 +34,12 @@ class Output
 
     public function isValid(): bool
     {
-        $status = $this->header->get('status');
-        if (is_null($status) || $status == self::STATUS_ABORT) {
-            return false;
-        }
-
-        return $status === self::STATUS_VALID;
+        return 0 === $this->getErrorCount();
     }
 
     public function wasAborted(): bool
     {
-        $status = $this->header->get('status');
-        return is_null($status) || $status == self::STATUS_ABORT;
+        return $this->wasAborted;
     }
 
     public function getErrorCount(): int
