@@ -2,24 +2,22 @@
 
 namespace webignition\HtmlValidatorOutput\Models;
 
+use webignition\ValidatorMessage\MessageList;
+
 class Output
 {
-    const TYPE_ERROR = 'error';
     const VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID = 'validator-internal-server-error';
-
-    /**
-     * @var Body
-     */
-    private $body;
 
     /**
      * @var bool
      */
     private $wasAborted = false;
 
-    public function __construct(Body $body)
+    private $messages;
+
+    public function __construct(MessageList $messages)
     {
-        $this->body = $body;
+        $this->messages = $messages;
     }
 
     public function setWasAborted(bool $wasAborted)
@@ -27,9 +25,9 @@ class Output
         $this->wasAborted = $wasAborted;
     }
 
-    public function getMessages(): array
+    public function getMessages(): MessageList
     {
-        return $this->body->getMessages();
+        return $this->messages;
     }
 
     public function isValid(): bool
@@ -44,18 +42,18 @@ class Output
 
     public function getErrorCount(): int
     {
-        $errorCount = 0;
-
-        foreach ($this->getMessages() as $message) {
-            if (isset($message->messageId) && $message->messageId == self::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID) {
-                return 0;
-            }
-
-            if (isset($message->type) && $message->type == self::TYPE_ERROR) {
-                $errorCount++;
-            }
+        if (0 === $this->messages->getMessageCount()) {
+            return 0;
         }
 
-        return $errorCount;
+        $messages = array_values($this->messages->getMessages());
+        $firstMessage = $messages[0];
+
+        if ($firstMessage instanceof ValidatorErrorMessage &&
+            self::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID === $firstMessage->getMessageId()) {
+            return 0;
+        }
+
+        return $this->messages->getErrorCount();
     }
 }

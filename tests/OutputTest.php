@@ -3,59 +3,20 @@
 
 namespace webignition\HtmlValidatorOutput\Models\Tests;
 
-use webignition\HtmlValidatorOutput\Models\Body;
+use webignition\HtmlValidatorOutput\Models\InfoMessage;
 use webignition\HtmlValidatorOutput\Models\Output;
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
+use webignition\HtmlValidatorOutput\Models\ValidatorErrorMessage;
+use webignition\ValidatorMessage\MessageList;
 
 class OutputTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @dataProvider getMessagesDataProvider
-     */
-    public function testGetMessages(Body $body, array $expectedMessages)
+    public function testGetMessages()
     {
-        $output = new Output($body);
+        $messageList = new MessageList();
 
-        $this->assertEquals($expectedMessages, $output->getMessages());
-    }
-
-    public function getMessagesDataProvider(): array
-    {
-        return [
-            'no messages' => [
-                'body' => new Body(),
-                'expectedMessages' => [],
-            ],
-            'has messages, empty' => [
-                'body' => $this->createBodyWithContent((object)[
-                    'messages' => [],
-                ]),
-                'expectedMessages' => [],
-            ],
-            'has messages, non-empty' => [
-                'body' => $this->createBodyWithContent((object)[
-                    'messages' => [
-                        [
-                            'lastLine' => 1,
-                            'lastColumn' => 2,
-                            'message' => 'foo',
-                            'messageid' => 'html5',
-                            'explanation' => 'foo explanation',
-                            'type' => 'error',
-                        ],
-                    ],
-                ]),
-                'expectedMessages' => [
-                    [
-                        'lastLine' => 1,
-                        'lastColumn' => 2,
-                        'message' => 'foo',
-                        'messageid' => 'html5',
-                        'explanation' => 'foo explanation',
-                        'type' => 'error',
-                    ],
-                ],
-            ],
-        ];
+        $output = new Output($messageList);
+        $this->assertSame($messageList, $output->getMessages());
     }
 
     /**
@@ -70,63 +31,33 @@ class OutputTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'validator internal server error' => [
-                'output' => new Output($this->createBodyWithContent((object)[
-                    'messages' => [
-                        (object) [
-                            'messageId' => Output::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID,
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new ValidatorErrorMessage(
+                        'Sorry, this document can\'t be checked',
+                        'validator-internal-server-error'
+                    )
                 ])),
                 'expectedIsValid' => true,
             ],
             'info messages only' => [
-                'output' => new Output($this->createBodyWithContent((object) [
-                    'messages' => [
-                        (object) [
-                            'type' => 'info',
-                        ],
-                        (object) [
-                            'type' => 'info',
-                        ],
-                        (object) [
-                            'type' => 'info',
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new InfoMessage('info message 1', 'html5', 'explanation'),
+                    new InfoMessage('info message 2', 'html5', 'explanation'),
                 ])),
                 'expectedIsValid' => true,
             ],
             'error messages only' => [
-                'output' => new Output($this->createBodyWithContent((object) [
-                    'messages' => [
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new ValidationErrorMessage('error message 1', 'html5', 'explanation', 1, 2),
+                    new ValidationErrorMessage('error message 2', 'html5', 'explanation', 3, 4),
                 ])),
                 'expectedIsValid' => false,
             ],
             'info messages and error messages' => [
-                'output' => new Output($this->createBodyWithContent((object) [
-                    'messages' => [
-                        (object) [
-                            'type' => 'info',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'info',
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new ValidationErrorMessage('error message 1', 'html5', 'explanation', 1, 2),
+                    new ValidationErrorMessage('error message 2', 'html5', 'explanation', 3, 4),
+                    new InfoMessage('info message 1', 'html5', 'explanation'),
                 ])),
                 'expectedIsValid' => false,
             ],
@@ -135,7 +66,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
 
     public function testWasAborted()
     {
-        $output = new Output(new Body());
+        $output = new Output(new MessageList());
 
         $this->assertFalse($output->wasAborted());
 
@@ -157,75 +88,41 @@ class OutputTest extends \PHPUnit\Framework\TestCase
     public function getErrorCountDataProvider(): array
     {
         return [
+            'no messages' => [
+                'output' => new Output(new MessageList()),
+                'expectedErrorCount' => 0,
+            ],
             'validator internal server error' => [
-                'output' => new Output($this->createBodyWithContent((object)[
-                    'messages' => [
-                        (object) [
-                            'messageId' => Output::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID,
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new ValidatorErrorMessage(
+                        'Sorry, this document can\'t be checked',
+                        'validator-internal-server-error'
+                    )
                 ])),
                 'expectedErrorCount' => 0,
             ],
             'info messages only' => [
-                'output' => new Output($this->createBodyWithContent((object) [
-                    'messages' => [
-                        (object) [
-                            'type' => 'info',
-                        ],
-                        (object) [
-                            'type' => 'info',
-                        ],
-                        (object) [
-                            'type' => 'info',
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new InfoMessage('info message 1', 'html5', 'explanation'),
+                    new InfoMessage('info message 2', 'html5', 'explanation'),
                 ])),
                 'expectedErrorCount' => 0,
             ],
             'error messages only' => [
-                'output' => new Output($this->createBodyWithContent((object) [
-                    'messages' => [
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new ValidationErrorMessage('error message 1', 'html5', 'explanation', 1, 2),
+                    new ValidationErrorMessage('error message 2', 'html5', 'explanation', 3, 4),
                 ])),
-                'expectedErrorCount' => 3,
+                'expectedErrorCount' => 2,
             ],
             'info messages and error messages' => [
-                'output' => new Output($this->createBodyWithContent((object) [
-                    'messages' => [
-                        (object) [
-                            'type' => 'info',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'error',
-                        ],
-                        (object) [
-                            'type' => 'info',
-                        ],
-                    ],
+                'output' => new Output(new MessageList([
+                    new ValidationErrorMessage('error message 1', 'html5', 'explanation', 1, 2),
+                    new ValidationErrorMessage('error message 2', 'html5', 'explanation', 3, 4),
+                    new InfoMessage('info message 1', 'html5', 'explanation'),
                 ])),
                 'expectedErrorCount' => 2,
             ],
         ];
-    }
-
-    private function createBodyWithContent(\stdClass $content): Body
-    {
-        $body = new Body();
-        $body->setContent($content);
-
-        return $body;
     }
 }
