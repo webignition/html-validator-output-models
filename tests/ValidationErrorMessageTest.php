@@ -8,9 +8,9 @@ class ValidationErrorMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
-        $message = 'message content';
+        $message = 'An img element must have an alt attribute, except under certain conditions.';
         $messageId = 'html5';
-        $explanation = 'explanation content';
+        $explanation = 'image missing alt attribute explanation';
         $lineNumber = 1;
         $columnNumber = 2;
 
