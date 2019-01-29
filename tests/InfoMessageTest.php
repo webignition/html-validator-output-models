@@ -27,4 +27,25 @@ class InfoMessageTest extends \PHPUnit\Framework\TestCase
             $infoMessage->jsonSerialize()
         );
     }
+
+    public function testWithMessageId()
+    {
+        $message = 'message';
+        $explanation = 'explanation';
+
+        $originalMessageId = 'original-message-id';
+        $updatedMessageId = 'updated-message-id';
+
+        $infoMessage = new InfoMessage($message, $originalMessageId, $explanation);
+        $mutatedInfoMessage = $infoMessage->withMessageId($updatedMessageId);
+
+        $this->assertNotSame($infoMessage, $mutatedInfoMessage);
+        $this->assertInstanceOf(InfoMessage::class, $mutatedInfoMessage);
+        $this->assertEquals($message, $mutatedInfoMessage->getMessage());
+        $this->assertEquals($updatedMessageId, $mutatedInfoMessage->getMessageId());
+
+        if ($mutatedInfoMessage instanceof InfoMessage) {
+            $this->assertEquals($explanation, $mutatedInfoMessage->getExplanation());
+        }
+    }
 }

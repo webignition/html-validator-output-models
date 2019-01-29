@@ -24,4 +24,20 @@ class ValidatorErrorMessageTest extends \PHPUnit\Framework\TestCase
             $errorMessage->jsonSerialize()
         );
     }
+
+    public function testWithMessageId()
+    {
+        $message = 'message';
+
+        $originalMessageId = 'original-message-id';
+        $updatedMessageId = 'updated-message-id';
+
+        $errorMessage = new ValidatorErrorMessage($message, $originalMessageId);
+        $mutatedErrorMessage = $errorMessage->withMessageId($updatedMessageId);
+
+        $this->assertNotSame($errorMessage, $mutatedErrorMessage);
+        $this->assertInstanceOf(ValidatorErrorMessage::class, $mutatedErrorMessage);
+        $this->assertEquals($message, $mutatedErrorMessage->getMessage());
+        $this->assertEquals($updatedMessageId, $mutatedErrorMessage->getMessageId());
+    }
 }
