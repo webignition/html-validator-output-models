@@ -2,9 +2,9 @@
 
 namespace webignition\HtmlValidatorOutput\Models\Tests;
 
-use webignition\HtmlValidatorOutput\Models\ErrorMessage;
+use webignition\HtmlValidatorOutput\Models\ValidationErrorMessage;
 
-class ErrorMessageTest extends \PHPUnit\Framework\TestCase
+class ValidationErrorMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
@@ -14,7 +14,7 @@ class ErrorMessageTest extends \PHPUnit\Framework\TestCase
         $lineNumber = 1;
         $columnNumber = 2;
 
-        $errorMessage = new ErrorMessage($message, $messageId, $explanation, $lineNumber, $columnNumber);
+        $errorMessage = new ValidationErrorMessage($message, $messageId, $explanation, $lineNumber, $columnNumber);
 
         $this->assertEquals($message, $errorMessage->getMessage());
         $this->assertEquals($messageId, $errorMessage->getMessageId());
