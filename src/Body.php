@@ -5,7 +5,7 @@ namespace webignition\HtmlValidatorOutput\Models;
 class Body
 {
     /**
-     * @var \stdClass
+     * @var \stdClass|null
      */
     private $content = null;
 
@@ -32,6 +32,8 @@ class Body
             return [];
         }
 
-        return $this->getContent()->messages;
+        return $this->content instanceof \stdClass
+            ? $this->content->messages
+            : [];
     }
 }
