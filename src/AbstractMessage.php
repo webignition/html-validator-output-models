@@ -24,7 +24,7 @@ abstract class AbstractMessage extends BaseAbstractMessage
 
     /**
      * @param string $messageId
-     * @return AbstractMessage|InfoMessage|ValidationError
+     * @return AbstractMessage|InfoMessage|ValidationErrorMessage
      */
     public function withMessageId(string $messageId): AbstractMessage
     {
