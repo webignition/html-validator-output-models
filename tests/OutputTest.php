@@ -20,14 +20,14 @@ class OutputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider isValidByErrorCountDataProvider
+     * @dataProvider isValidDataProvider
      */
-    public function testIsValidByErrorCount(Output $output, bool $expectedIsValid)
+    public function testIsValid(Output $output, bool $expectedIsValid)
     {
         $this->assertEquals($expectedIsValid, $output->isValid());
     }
 
-    public function isValidByErrorCountDataProvider(): array
+    public function isValidDataProvider(): array
     {
         return [
             'validator internal server error' => [
@@ -37,7 +37,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                         'validator-internal-server-error'
                     )
                 ])),
-                'expectedIsValid' => true,
+                'expectedIsValid' => false,
             ],
             'info messages only' => [
                 'output' => new Output(new MessageList([
@@ -62,19 +62,6 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedIsValid' => false,
             ],
         ];
-    }
-
-    public function testIsValidByValidity()
-    {
-        $output = new Output(new MessageList());
-
-        $this->assertTrue($output->isValid());
-
-        $output->setIsValid(false);
-        $this->assertFalse($output->isValid());
-
-        $output->setIsValid(true);
-        $this->assertTrue($output->isValid());
     }
 
     public function testWasAborted()
@@ -112,7 +99,7 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                         'validator-internal-server-error'
                     )
                 ])),
-                'expectedErrorCount' => 0,
+                'expectedErrorCount' => 1,
             ],
             'info messages only' => [
                 'output' => new Output(new MessageList([
