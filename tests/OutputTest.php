@@ -20,14 +20,14 @@ class OutputTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider isValidDataProvider
+     * @dataProvider isValidByErrorCountDataProvider
      */
-    public function testIsValid(Output $output, bool $expectedIsValid)
+    public function testIsValidByErrorCount(Output $output, bool $expectedIsValid)
     {
         $this->assertEquals($expectedIsValid, $output->isValid());
     }
 
-    public function isValidDataProvider(): array
+    public function isValidByErrorCountDataProvider(): array
     {
         return [
             'validator internal server error' => [
@@ -62,6 +62,19 @@ class OutputTest extends \PHPUnit\Framework\TestCase
                 'expectedIsValid' => false,
             ],
         ];
+    }
+
+    public function testIsValidByValidity()
+    {
+        $output = new Output(new MessageList());
+
+        $this->assertTrue($output->isValid());
+
+        $output->setIsValid(false);
+        $this->assertFalse($output->isValid());
+
+        $output->setIsValid(true);
+        $this->assertTrue($output->isValid());
     }
 
     public function testWasAborted()
