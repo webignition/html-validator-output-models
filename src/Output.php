@@ -13,11 +13,6 @@ class Output
      */
     private $wasAborted = false;
 
-    /**
-     * @var bool
-     */
-    private $isValid = true;
-
     private $messages;
 
     public function __construct(MessageList $messages)
@@ -30,11 +25,6 @@ class Output
         $this->wasAborted = $wasAborted;
     }
 
-    public function setIsValid(bool $isValid)
-    {
-        $this->isValid = $isValid;
-    }
-
     public function getMessages(): MessageList
     {
         return $this->messages;
@@ -42,10 +32,6 @@ class Output
 
     public function isValid(): bool
     {
-        if (false === $this->isValid) {
-            return false;
-        }
-
         return 0 === $this->getErrorCount();
     }
 
@@ -56,18 +42,6 @@ class Output
 
     public function getErrorCount(): int
     {
-        if (0 === $this->messages->getMessageCount()) {
-            return 0;
-        }
-
-        $messages = array_values($this->messages->getMessages());
-        $firstMessage = $messages[0];
-
-        if ($firstMessage instanceof ValidatorErrorMessage &&
-            self::VALIDATOR_INTERNAL_SERVER_ERROR_MESSAGE_ID === $firstMessage->getMessageId()) {
-            return 0;
-        }
-
         return $this->messages->getErrorCount();
     }
 }
