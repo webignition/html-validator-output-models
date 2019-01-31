@@ -21,7 +21,7 @@ class InfoMessageTest extends \PHPUnit\Framework\TestCase
             [
                 'type' => 'info',
                 'message' => $message,
-                'messageid' => $messageId,
+                'messageId' => $messageId,
                 'explanation' => $explanation,
             ],
             $infoMessage->jsonSerialize()

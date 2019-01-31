@@ -25,7 +25,7 @@ class ValidationErrorMessageTest extends \PHPUnit\Framework\TestCase
             [
                 'type' => 'error',
                 'message' => $message,
-                'messageid' => $messageId,
+                'messageId' => $messageId,
                 'explanation' => $explanation,
                 'lastLine' => $lineNumber,
                 'lastColumn' => $columnNumber,
