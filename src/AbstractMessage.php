@@ -6,7 +6,7 @@ use webignition\ValidatorMessage\AbstractMessage as BaseAbstractMessage;
 
 abstract class AbstractMessage extends BaseAbstractMessage
 {
-    const KEY_MESSAGE_ID = 'messageid';
+    const KEY_MESSAGE_ID = 'messageId';
 
     private $messageId;
 

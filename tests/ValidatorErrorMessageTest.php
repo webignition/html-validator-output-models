@@ -19,7 +19,7 @@ class ValidatorErrorMessageTest extends \PHPUnit\Framework\TestCase
             [
                 'type' => 'error',
                 'message' => $message,
-                'messageid' => $messageId,
+                'messageId' => $messageId,
             ],
             $errorMessage->jsonSerialize()
         );
