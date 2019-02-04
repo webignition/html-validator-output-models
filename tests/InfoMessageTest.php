@@ -10,7 +10,7 @@ class InfoMessageTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider createDataProvider
      */
-    public function testCreate(string $message, string $messageId, ?string $explanation)
+    public function testCreate(string $message, string $messageId, ?string $explanation = null)
     {
         $infoMessage = new InfoMessage($message, $messageId, $explanation);
 
@@ -39,7 +39,6 @@ class InfoMessageTest extends \PHPUnit\Framework\TestCase
             'without explanation' => [
                 'message' => 'message content',
                 'messageId' => 'html5',
-                'explanation' => null,
             ],
         ];
     }
