@@ -8,14 +8,14 @@ abstract class AbstractIssueMessage extends AbstractMessage
 
     private $explanation;
 
-    public function __construct(string $type, string $message, string $messageId, ?string $explanation)
+    public function __construct(string $type, string $message, string $messageId, string $explanation)
     {
         parent::__construct($type, $message, $messageId);
 
         $this->explanation = $explanation;
     }
 
-    public function getExplanation(): ?string
+    public function getExplanation(): string
     {
         return $this->explanation;
     }
