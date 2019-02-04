@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpDocSignatureInspection */
 
 namespace webignition\HtmlValidatorOutput\Models\Tests;
 
@@ -6,12 +7,11 @@ use webignition\HtmlValidatorOutput\Models\InfoMessage;
 
 class InfoMessageTest extends \PHPUnit\Framework\TestCase
 {
-    public function testCreate()
+    /**
+     * @dataProvider createDataProvider
+     */
+    public function testCreate(string $message, string $messageId, ?string $explanation)
     {
-        $message = 'message content';
-        $messageId = 'html5';
-        $explanation = 'explanation content';
-
         $infoMessage = new InfoMessage($message, $messageId, $explanation);
 
         $this->assertEquals($message, $infoMessage->getMessage());
@@ -26,6 +26,22 @@ class InfoMessageTest extends \PHPUnit\Framework\TestCase
             ],
             $infoMessage->jsonSerialize()
         );
+    }
+
+    public function createDataProvider()
+    {
+        return [
+            'with explanation' => [
+                'message' => 'message content',
+                'messageId' => 'html5',
+                'explanation' => 'explanation content',
+            ],
+            'without explanation' => [
+                'message' => 'message content',
+                'messageId' => 'html5',
+                'explanation' => null,
+            ],
+        ];
     }
 
     public function testWithMessageId()
